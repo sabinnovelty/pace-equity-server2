@@ -7,6 +7,7 @@ import { PortfolioConcentrationLimitModule } from './modules/portfolio-concentra
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtMiddleware } from './core/middlewares/jwt-parse.middleware';
 import * as cookieParser from 'cookie-parser';
+import { AppDataSource } from './config/data-source';
 
 const dbConfig = require('../ormConfig.js');
 
@@ -16,7 +17,10 @@ const dbConfig = require('../ormConfig.js');
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRoot(dbConfig),
+    // TypeOrmModule.forRoot(dbConfig),
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => ({ ...AppDataSource.options }), // Load config dynamically
+    }),
     PortfolioConcentrationLimitModule,
   ],
   controllers: [AppController],

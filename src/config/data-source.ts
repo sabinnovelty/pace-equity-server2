@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Config } from '.';
+
 console.log(Config);
 const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

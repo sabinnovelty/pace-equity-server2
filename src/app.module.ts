@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtMiddleware } from './core/middlewares/jwt-parse.middleware';
 import * as cookieParser from 'cookie-parser';
 import { AppDataSource } from './config/data-source';
+import { UserModule } from './modules/user/user.module';
 
 const dbConfig = require('../ormConfig.js');
 
@@ -18,10 +19,17 @@ const dbConfig = require('../ormConfig.js');
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     // TypeOrmModule.forRoot(dbConfig),
+    // TypeOrmModule.forRootAsync({
+    //   useFactory: async () => ({ ...AppDataSource.options }), // Load config dynamically
+    // }),
     TypeOrmModule.forRootAsync({
-      useFactory: async () => ({ ...AppDataSource.options }), // Load config dynamically
+      useFactory: async () => {
+        await AppDataSource.initialize(); // Explicitly initialize the database connection
+        return { ...AppDataSource.options };
+      },
     }),
     PortfolioConcentrationLimitModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,0 +1,43 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:  # Manually trigger rollback
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+
+    steps:
+      - name: Get Repository Name
+        id: repo-name
+        uses: MariachiBear/get-repo-name-action@v1.1.0
+        with:
+          with-owner: 'false'
+          string-case: 'lowercase'
+          
+      - name: Authenticate with AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Execute Rollback Script on Server
+        uses: peterkimzz/aws-ssm-send-command@master
+        id: ssm
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          instance-ids: ${{ secrets.INSTANCE_ID }}
+
+          working-directory: /home/ubuntu/${{ github.ref_name }}/${{ steps.repo-name.outputs.repository-name }}
+          command: bash rollback.sh
+          comment: "Rolling back to previous deployment"
+
+      - name: Get SSM Command ID
+        run: echo "Rollback initiated with Command ID ${{ steps.ssm.outputs.command-id }}"
+
+       

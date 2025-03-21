@@ -1,0 +1,55 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "gateway",
+      "type": "node",
+      "request": "attach",
+      "port": 9000,
+      "restart": true,
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
+      "address": "localhost"
+    },
+    {
+      "name": "user-auth",
+      "type": "node",
+      "request": "attach",
+      "port": 9001,
+      "restart": true,
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
+      "address": "localhost"
+    },
+    {
+      "name": "communication",
+      "type": "node",
+      "request": "attach",
+      "port": 9002,
+      "restart": true,
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
+      "address": "localhost"
+    },
+    {
+      "name": "log",
+      "type": "node",
+      "request": "attach",
+      "port": 9003,
+      "restart": true,
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
+      "address": "localhost"
+    },
+    {
+      "name": "network",
+      "type": "node",
+      "request": "attach",
+      "port": 9004,
+      "restart": true,
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}",
+      "address": "localhost"
+    }
+  ]
+}

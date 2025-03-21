@@ -1,0 +1,154 @@
+name: Migration
+run-name: Migration run on ${{ github.ref_name }} by @ ${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+          - 'dev'
+          - 'qa'
+          - 'feature'
+          - 'uat'
+          - 'prod'
+
+      service:
+        description: Service
+        required: true
+        type: choice
+        options:
+          - 'all'
+          - 'user-auth'
+          - 'communication'
+          - 'activity-log'
+          - 'network'
+
+  push:
+    branches: [dev, qa, uat, prod]
+
+  pull_request:
+    branches: [dev, qa, uat, prod]
+
+env:
+  MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
+  MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+  MONGO_CLUSTER_NAME: ${{ secrets.MONGO_CLUSTER_NAME }}
+  MONGO_DB_PROTOCOL: ${{ secrets.MONGO_DB_PROTOCOL }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  detect-changed-files-and-environment:
+    name: Detect file changes and determine environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine environment
+        run: |
+          is_manual_run=$(echo ${{ contains(github.event_name, 'workflow_dispatch') }})
+
+          if [ $is_manual_run == 'true' ]; then
+            app_env=${{ github.event.inputs.environment }}
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For pull requests, use the target branch name (e.g., 'dev', 'qa')
+            app_env="${{ github.event.pull_request.base.ref }}"
+          else
+            app_env=${{ github.ref_name }}
+          fi
+
+          echo "app_env=${app_env}" >> $GITHUB_ENV
+
+          echo "Environment: $app_env"
+
+      - uses: dorny/paths-filter@v3
+        if: github.event_name != 'workflow_dispatch'
+        id: changes
+        with:
+          base: ${{ github.ref_name || 'dev' }}
+          filters: |
+            user-auth:
+              - 'apps/user-auth/src/external-lib/mongo-db/migrations/**'
+            communication:
+              - 'apps/communication/src/external-lib/mongo-db/migrations/**'
+            activity-log:
+              - 'apps/activity-log/src/external-lib/mongo-db/migrations/**'
+            network:
+              - 'apps/network/src/external-lib/mongo-db/migrations/**'
+
+      - name: Set Output
+        id: changed-services
+        run: |
+          is_manual_run=$(echo ${{ contains(github.event_name, 'workflow_dispatch') }})
+          all_services="user-auth,activity-log,communication,network"
+          CHANGES=${{ toJson(steps.changes.outputs.changes) }}
+
+          if [ $is_manual_run == 'true' ]; then
+            input_services=${{ github.event.inputs.service }}
+
+            if [ $input_services == 'all' ]; then
+              input_services=$all_services
+            fi
+
+            converted_inputs=$( jq -nc --arg input_services "$input_services" '$input_services | split(",")' )
+            CHANGES=$converted_inputs
+          fi
+
+          echo "changes: $CHANGES"
+          echo "changed_services=${CHANGES}" >> $GITHUB_ENV
+          echo "env: $app_env"
+
+    outputs:
+      services: ${{ env.changed_services }}
+      app_env: ${{ env.app_env }}
+
+  migrate:
+    needs: [detect-changed-files-and-environment]
+    if: ${{ needs.detect-changed-files-and-environment.outputs.services != '[]' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.detect-changed-files-and-environment.outputs.app_env }}
+    strategy:
+      max-parallel: 4 # Run jobs in matrix sequentially.
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.detect-changed-files-and-environment.outputs.services) }}
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Set environment
+        run: |
+          environment=${{ needs.detect-changed-files-and-environment.outputs.app_env }}
+          echo "Setting environment to $environment"
+          echo "app_env=${environment}" >> $GITHUB_ENV
+
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Run DB Migrate up --dry-run
+        if: github.event_name == 'pull_request'
+        run: cd apps/${{matrix.service}} && npx mongo-migrate up -d
+
+      - name: Run DB Migrate up
+        if: github.event_name == 'push'
+        run: cd apps/${{matrix.service}} && npx mongo-migrate up

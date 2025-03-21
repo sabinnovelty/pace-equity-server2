@@ -5,19 +5,19 @@ x-defaults: &apiServiceDefaults
   env_file:
     - .env
   networks:
-    - provider-directory-server
+    - gold-v2-server
 
 networks:
-  provider-directory-server:
+  gold-v2-server:
 
 services:
   redis:
-    container_name: provider-directory-redis
+    container_name: gold-v2-redis
     image: redis:latest
     ports:
       - 6379:6379
     networks:
-      - provider-directory-server
+      - gold-v2-server
     restart: on-failure
     env_file:
       - .env
@@ -27,7 +27,7 @@ services:
 
   kafka:
     image: bitnami/kafka
-    container_name: provider-directory-kafka-server
+    container_name: gold-v2-kafka-server
     user: '0:0'
     ports:
       - 9092:9092
@@ -46,11 +46,11 @@ services:
     volumes:
       - ./kafka-data:/bitnami/kafka
     networks:
-      - provider-directory-server
+      - gold-v2-server
 
   gateway:
     <<: *apiServiceDefaults
-    container_name: provider-directory-gateway-server
+    container_name: gold-v2-gateway-server
     build:
       args:
         APP: gateway
@@ -67,7 +67,7 @@ services:
 
   user-auth:
     <<: *apiServiceDefaults
-    container_name: provider-directory-user-auth-server
+    container_name: gold-v2-user-auth-server
     ports:
       - '3001:3001'
       - '9001:9001'
@@ -84,7 +84,7 @@ services:
 
   communication:
     <<: *apiServiceDefaults
-    container_name: provider-directory-communication-server
+    container_name: gold-v2-communication-server
     ports:
       - '3002:3002'
       - '9002:9002'
@@ -101,7 +101,7 @@ services:
 
   activity-log:
     <<: *apiServiceDefaults
-    container_name: provider-directory-activity-log-server
+    container_name: gold-v2-activity-log-server
     ports:
       - '3003:3003'
       - '9003:9003'
@@ -118,7 +118,7 @@ services:
 
   network:
     <<: *apiServiceDefaults
-    container_name: provider-directory-network-server
+    container_name: gold-v2-network-server
     ports:
       - '3004:3004'
       - '9004:9004'

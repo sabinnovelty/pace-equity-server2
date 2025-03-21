@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { EncryptionFieldType } from '../types';
 import { isEmpty } from '../../../shared/utils';
 import { AutoEncryptionOptions, Db } from 'mongodb';
-import { ConfigServiceImpl } from '../../../config/config-service';
+import { ConfigService } from '../../../shared/abstractions';
 
 @Injectable()
 export class DbEncryptionManager {
-  constructor(private configService: ConfigServiceImpl) {}
+  constructor(private configService: ConfigService) {}
   getAutoEncryptionConfig(): AutoEncryptionOptions | any | undefined {
     const dbName = this.configService.mongoDb.dbName;
     const dbEncryptionConfig = this.configService.mongoDbEncryption;

@@ -1,5 +1,4 @@
 import { ProjectModule } from '../../../shared/enum';
-import { UserQueryDoc, UserCountQueryDoc } from './docs';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UnitOfWork } from '../../../shared/abstractions';
 import { CreateUserBody } from './validations/create-user';
@@ -8,6 +7,7 @@ import { UserQueryParams } from './validations/user-query';
 import { successMessage } from '../../../shared/constants';
 import { UserService } from '../domain/abstractions/user-service';
 import { UserResponse } from '../presenters/response/user-response';
+import { UserCountQueryDoc, UserQueryDoc } from './docs/user-query';
 import { UserPresenter } from '../presenters/abstractions/user-presenter';
 import { AuthEntityDecorator } from '../../../external-lib/nest-js/decorators';
 import { buildHttpResponse, formatModuleMessage } from '../../../shared/utils';

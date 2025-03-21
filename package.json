@@ -1,5 +1,5 @@
 {
-  "name": "provider-directory",
+  "name": "gold-v2",
   "private": true,
   "scripts": {
     "create-feature": "ts-node cli/cli.ts create-feature",
@@ -22,7 +22,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "@provider-directory/core": "*",
+    "@gold-v2/core": "*",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",

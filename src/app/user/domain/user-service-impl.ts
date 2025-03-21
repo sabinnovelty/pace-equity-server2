@@ -16,7 +16,8 @@ export class UserServiceImpl implements UserService {
   constructor(private userRepository: UserRepository) {}
 
   async create(createDto: CreateUserDto, option: ServiceOption): Promise<User> {
-    const user = new User(createDto);
+    const user = new User();
+    user.initialize(createDto);
 
     const createdUser = await this.userRepository.create(user, option);
 

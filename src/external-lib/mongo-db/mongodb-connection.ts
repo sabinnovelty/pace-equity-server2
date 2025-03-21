@@ -4,10 +4,9 @@ import { sleep } from '../../shared/utils';
 import { Injectable } from '@nestjs/common';
 import { EncryptionFieldType } from './types';
 import { IDbConfig } from '../../config/type';
-import { Logger } from '../../shared/abstractions';
 import { QEManager } from './encryptions/qe-manager';
 import { CSFLEManager } from './encryptions/csfle-manager';
-import { ConfigServiceImpl } from '../../config/config-service';
+import { ConfigService, Logger } from '../../shared/abstractions';
 import { DbEncryptionManager } from './encryptions/db-encryption-manager';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class MongoConnection {
   private retryCount = 0;
 
   constructor(
-    private configService: ConfigServiceImpl,
+    private configService: ConfigService,
     private csfleManager: CSFLEManager,
     private dbEncryptionManager: DbEncryptionManager,
     private qeManager: QEManager,

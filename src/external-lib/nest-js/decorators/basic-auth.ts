@@ -1,5 +1,6 @@
+import { AUTHORIZATION_HEADER } from '../../../shared/constants';
+import { BasicAuthPayload, HttpRequest } from '../../../shared/types';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { AUTHORIZATION_HEADER, BasicAuthPayload, HttpRequest } from '../../../shared';
 
 export const BasicAuthPayloadDecorator = createParamDecorator(
   (_: any, context: ExecutionContext) => {

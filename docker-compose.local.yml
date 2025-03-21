@@ -5,15 +5,15 @@ x-defaults: &apiServiceDefaults
   env_file:
     - .env.local
   networks:
-    - provider-directory-local
+    - gold-v2-local
 
 networks:
-  provider-directory-local:
+  gold-v2-local:
 
 services:
   kafka:
     image: bitnami/kafka
-    container_name: provider-directory-kafka-local
+    container_name: gold-v2-kafka-local
     ports:
       - 9092:9092
     environment:
@@ -31,26 +31,26 @@ services:
     volumes:
       - ./kafka-data:/bitnami/kafka
     networks:
-      - provider-directory-local
+      - gold-v2-local
 
   mongodb:
     image: mongo:latest
-    container_name: provider-directory-mongodb-local
+    container_name: gold-v2-mongodb-local
     restart: always
     extra_hosts:
       - 'localhost:0.0.0.0'
     ports:
-      -  ${MONGO_DB_PORT}:${MONGO_DB_PORT}
+      - ${MONGO_DB_PORT}:${MONGO_DB_PORT}
     networks:
-      - provider-directory-local
+      - gold-v2-local
     env_file:
       - .env.local
     environment:
-          - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-          - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-          - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
-          - MONGO_INITDB_USER=${MONGO_USERNAME}
-          - MONGO_INITDB_PWD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+      - MONGO_INITDB_USER=${MONGO_USERNAME}
+      - MONGO_INITDB_PWD=${MONGO_PASSWORD}
     volumes:
       - ./mongodb-data:/data/db
       - ./mongodb_replica/initiate.sh:/script/initiate.sh
@@ -58,7 +58,7 @@ services:
 
   gateway:
     <<: *apiServiceDefaults
-    container_name: provider-directory-gateway-local
+    container_name: gold-v2-gateway-local
     build:
       args:
         APP: gateway
@@ -71,7 +71,7 @@ services:
 
   user-auth:
     <<: *apiServiceDefaults
-    container_name: provider-directory-user-auth-local
+    container_name: gold-v2-user-auth-local
     ports:
       - '3001:3001'
       - '9001:9001'
@@ -88,7 +88,7 @@ services:
 
   communication:
     <<: *apiServiceDefaults
-    container_name: provider-directory-communication-local
+    container_name: gold-v2-communication-local
     ports:
       - '3002:3002'
       - '9002:9002'
@@ -105,7 +105,7 @@ services:
 
   activity-log:
     <<: *apiServiceDefaults
-    container_name: provider-directory-activity-log-local
+    container_name: gold-v2-activity-log-local
     ports:
       - '3003:3003'
       - '9003:9003'
@@ -122,7 +122,7 @@ services:
 
   network:
     <<: *apiServiceDefaults
-    container_name: provider-directory-network-local
+    container_name: gold-v2-network-local
     ports:
       - '3004:3004'
       - '9004:9004'

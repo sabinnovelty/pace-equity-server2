@@ -10,7 +10,7 @@ import { Anonymous } from '../external-lib/nest-js/decorators';
 export class AppController {
   constructor() {}
 
-  @Get('/network/health')
+  @Get('/health')
   @Anonymous()
   getHealth(): IHttpResponse {
     return buildHttpResponse(null, `${APP_NAME} API up and running!`);

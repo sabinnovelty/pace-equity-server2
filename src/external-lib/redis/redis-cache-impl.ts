@@ -16,36 +16,30 @@ export class RedisCacheImpl implements Cache, OnModuleDestroy {
   }
 
   private async initializeRedis() {
-    this.redisClient = new Redis({
-      ...this.configService.redis,
-      retryStrategy: times => {
-        if (times <= this.MAX_RETRIES + 1) {
-          // For 6th try
-          if (times > this.MAX_RETRIES) {
-            this.logger.error('Max retry attempts reached for Redis connection.');
-
-            return null;
-          }
-
-          const delay = times;
-          this.logger.warn(`Retrying Redis connection in ${delay} seconds. Attempt ${times}`);
-
-          return delay * 1000;
-        }
-
-        return null;
-      },
-    });
-
-    this.redisClient.on('error', async error => {
-      this._isRedisAvailable = false;
-      this.logger.warn(`Redis connection error: ${error.message}`);
-    });
-
-    this.redisClient.on('connect', () => {
-      this._isRedisAvailable = true;
-      this.logger.info('Redis connected successfully');
-    });
+    // this.redisClient = new Redis({
+    //   ...this.configService.redis,
+    //   retryStrategy: times => {
+    //     if (times <= this.MAX_RETRIES + 1) {
+    //       // For 6th try
+    //       if (times > this.MAX_RETRIES) {
+    //         this.logger.error('Max retry attempts reached for Redis connection.');
+    //         return null;
+    //       }
+    //       const delay = times;
+    //       this.logger.warn(`Retrying Redis connection in ${delay} seconds. Attempt ${times}`);
+    //       return delay * 1000;
+    //     }
+    //     return null;
+    //   },
+    // });
+    // this.redisClient.on('error', async error => {
+    //   this._isRedisAvailable = false;
+    //   this.logger.warn(`Redis connection error: ${error.message}`);
+    // });
+    // this.redisClient.on('connect', () => {
+    //   this._isRedisAvailable = true;
+    //   this.logger.info('Redis connected successfully');
+    // });
   }
 
   getClient(): Redis {

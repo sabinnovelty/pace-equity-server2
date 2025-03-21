@@ -7,6 +7,7 @@ import { JwtTokenHelperImpl } from '../token';
 import { Global, Module } from '@nestjs/common';
 import { MongoDbUnitOfWorkImpl } from '../mongo-db';
 import {
+  Cache,
   CookieHelper,
   CryptoHelper,
   Logger,

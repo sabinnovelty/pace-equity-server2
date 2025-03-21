@@ -1,4 +1,4 @@
-import { HttpRequest } from '../../../shared';
+import { HttpRequest } from '../../../shared/types';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const RefreshTokenPayloadDecorator = createParamDecorator(

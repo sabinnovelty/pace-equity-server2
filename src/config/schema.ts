@@ -51,7 +51,6 @@ export const configSchema = z
   })
   .merge(appSchema)
   .merge(mongodbSchema)
-  .merge(mongodbEncryptionSchema)
   .merge(redisSchema);
 
 export type IEnvConfig = z.infer<typeof configSchema>;

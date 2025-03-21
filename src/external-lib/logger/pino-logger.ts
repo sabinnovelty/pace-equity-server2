@@ -1,14 +1,14 @@
 import pino, { Logger } from 'pino';
 import { Injectable } from '@nestjs/common';
-import { BaseConfigService } from '../../shared';
-import { AnyObj } from '../../shared/domain/types/object';
-import { Logger as AppLogger } from '../../shared/domain/abstractions/logger';
+import { AnyObj } from '../../shared/types';
+import { ConfigService } from '../../shared/abstractions';
+import { Logger as AppLogger } from '../../shared/abstractions';
 
 @Injectable()
 export class PinoLogger implements AppLogger {
   private logger: Logger;
 
-  constructor(configService: BaseConfigService) {
+  constructor(configService: ConfigService) {
     this.logger = pino({
       ...(configService.app.isDebug && { level: 'debug' }),
       transport: {

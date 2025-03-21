@@ -11,28 +11,19 @@ networks:
   gold-v2-local:
 
 services:
-  kafka:
-    image: bitnami/kafka
-    container_name: gold-v2-kafka-local
+  redis:
+    container_name: gold-v2-redis
+    image: redis:latest
     ports:
-      - 9092:9092
-    environment:
-      - KAFKA_ENABLE_KRAFT=yes
-      - KAFKA_CFG_PROCESS_ROLES=broker,controller
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9092,CONTROLLER://localhost:2181
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_NODE_ID=1
-      - KAFKA_KRAFT_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
-    volumes:
-      - ./kafka-data:/bitnami/kafka
+      - 6379:6379
     networks:
-      - gold-v2-local
-
+      - gold-v2-server
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./redis-data:/data
+    command: sh -c "redis-server --requirepass $REDIS_PASSWORD"
   mongodb:
     image: mongo:latest
     container_name: gold-v2-mongodb-local
@@ -56,25 +47,12 @@ services:
       - ./mongodb_replica/initiate.sh:/script/initiate.sh
     command: sh /script/initiate.sh -u $MONGO_USERNAME -p $MONGO_PASSWORD
 
-  gateway:
-    <<: *apiServiceDefaults
-    container_name: gold-v2-gateway-local
-    build:
-      args:
-        APP: gateway
-        START_COMMAND: local
-      dockerfile: ./Dockerfile.development
-    ports:
-      - '3000:3000'
-      - '9000:9000'
-      - '9876:9876'
-
-  user-auth:
+  api-server:
     <<: *apiServiceDefaults
     container_name: gold-v2-user-auth-local
     ports:
-      - '3001:3001'
-      - '9001:9001'
+      - '3000:3000'
+      - '9000:9000'
     build:
       args:
         APP: user-auth
@@ -82,57 +60,5 @@ services:
       context: .
       dockerfile: ./Dockerfile.development
     volumes:
-      - ./apps/user-auth:/app/apps/user-auth
-      - ./packages/core:/app/packages/core
-      - /app/apps/user-auth/node_modules
-
-  communication:
-    <<: *apiServiceDefaults
-    container_name: gold-v2-communication-local
-    ports:
-      - '3002:3002'
-      - '9002:9002'
-    build:
-      args:
-        APP: communication
-        START_COMMAND: local
-      context: .
-      dockerfile: ./Dockerfile.development
-    volumes:
-      - ./apps/communication:/app/apps/communication
-      - ./packages/core:/app/packages/core
-      - /app/apps/communication/node_modules
-
-  activity-log:
-    <<: *apiServiceDefaults
-    container_name: gold-v2-activity-log-local
-    ports:
-      - '3003:3003'
-      - '9003:9003'
-    build:
-      args:
-        APP: activity-log
-        START_COMMAND: local
-      context: .
-      dockerfile: ./Dockerfile.development
-    volumes:
-      - ./apps/activity-log:/app/apps/activity-log
-      - ./packages/core:/app/packages/core
-      - /app/apps/activity-log/node_modules
-
-  network:
-    <<: *apiServiceDefaults
-    container_name: gold-v2-network-local
-    ports:
-      - '3004:3004'
-      - '9004:9004'
-    build:
-      args:
-        APP: network
-        START_COMMAND: local
-      context: .
-      dockerfile: ./Dockerfile.development
-    volumes:
-      - ./apps/network:/app/apps/network
-      - ./packages/core:/app/packages/core
-      - /app/apps/network/node_modules
+      - ./:/app/
+      - /node_modules

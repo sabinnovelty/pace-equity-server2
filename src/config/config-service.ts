@@ -32,7 +32,6 @@ export class ConfigServiceImpl implements ConfigService {
     return {
       defaultUserPassword: this._envData.DEFAULT_USER_PASSWORD,
       authTokenSecret: this._envData.AUTH_TOKEN_SECRET,
-      mfaTokenKey: this._envData.MFA_TOKEN_KEY,
     };
   }
 

@@ -1,7 +1,6 @@
 export interface IAuthConfig {
   defaultUserPassword: string;
   authTokenSecret: string;
-  mfaTokenKey: string;
 }
 
 export interface IDbConfig {

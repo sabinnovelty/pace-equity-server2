@@ -47,7 +47,6 @@ export const configSchema = z
   .object({
     DEFAULT_USER_PASSWORD: z.string(),
     AUTH_TOKEN_SECRET: z.string(),
-    MFA_TOKEN_KEY: z.string(),
   })
   .merge(appSchema)
   .merge(mongodbSchema)

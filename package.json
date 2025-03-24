@@ -10,6 +10,8 @@
     "start": "node dist/main",
     "local": "dotenvx run -f .env.local -- nest start --debug 0.0.0.0:9000 --watch 'node --inspect-brk'",
     "server": "dotenvx run -f .env -- nest start --debug 0.0.0.0:9000 --watch 'node --inspect-brk'",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest --passWithNoTests",
     "test:failedOnly": "jest --onlyFailures",
     "test:watch": "jest --watch --passWithNoTests",

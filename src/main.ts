@@ -18,7 +18,6 @@ class Application {
 
   async init() {
     // this.app.setGlobalPrefix('api');
-
     const configService = this.app.get(ConfigService);
 
     this.app.use(cookieParser(configService.auth.cookieSecret));

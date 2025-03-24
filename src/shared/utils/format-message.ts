@@ -1,9 +1,6 @@
 import { Maybe } from '../types';
 import { ZodError, ZodIssue } from 'zod';
 
-const DEFAULT_MONGO_VALIDATION_MESSAGE =
-  'Document validation failed. Ensure all fields meet the required schema constraints.';
-
 const formatZodIssue = (issue: ZodIssue): string => {
   const { path, message } = issue;
   const pathString = path.join('.');

@@ -1,9 +1,9 @@
 import { BaseSchema } from './schema';
 import { Equal, Repository } from 'typeorm';
 import { BaseEntity } from '../../shared/entities';
-import { errorMessage } from '../../shared/constants';
-import { DomainException } from '../../shared/exception';
-import { formatModuleMessage } from '../../shared/utils';
+// import { errorMessage } from '../../shared/constants';
+// import { DomainException } from '../../shared/exception';
+// import { formatModuleMessage } from '../../shared/utils';
 import { BasePersistenceMapper, BaseRepository } from '../../shared/abstractions';
 import {
   CountResponse,

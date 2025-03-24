@@ -1,5 +1,4 @@
 import { Assigner } from '../types';
-import { getUUID } from '../utils/common';
 
 export class BaseEntity {
   id: number;

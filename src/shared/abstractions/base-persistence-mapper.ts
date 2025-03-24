@@ -1,7 +1,7 @@
 import { BaseEntity } from '../entities';
 import { FindManyOptions } from 'typeorm';
 import { withoutEmptyValues } from '../utils';
-import { AnyObj, DBQuery, IQuery } from '../types';
+import { AnyObj, IQuery } from '../types';
 import { BaseSchema } from '../../external-lib/postgres/schema';
 
 export abstract class BasePersistenceMapper<

@@ -16,6 +16,7 @@ import type {
   FindAllResponse,
   IHttpResponse,
 } from '../../../shared/types';
+import type { PortfolioConcentrationLimitQueryOptions } from '../domain/dtos/portfolio-concentration-limit-query';
 import { PortfolioConcentrationLimitService } from '../domain/abstractions/portfolio-concentration-limit-service';
 import {
   PortfolioConcentrationLimitCountQueryDoc,
@@ -104,23 +105,20 @@ export class PortfolioConcentrationLimitController {
   // @ApiBearerAuth('JWT')
   @Get('/:id')
   async getOneById(
-    @Param('id') id: string
-    // @AuthEntityDecorator() authEntity: AuthEntity
+    @Param('id') id: string,
+    @Query() query: PortfolioConcentrationLimitQueryOptions,
+    @AuthEntityDecorator() authEntity: AuthEntity
   ): Promise<IHttpResponse<PortfolioConcentrationLimitResponse>> {
-    // const responseData = this.userPresenter.domainToPresentation(
-    //   await this.portfolioConcentrationLimitService.getOneById(+id, { authEntity })
-    // );
-    console.log('id', id);
-    const response: any = await this.portfolioConcentrationLimitService.get({ portfolioId: +id });
+    const responseData: any =
+      await this.portfolioConcentrationLimitService.getPortfolioByIdFromStoredProcedure(+id, query);
 
-    return response;
-    // return buildHttpResponse(
-    //   responseData,
-    //   formatModuleMessage(
-    //     successMessage.MODULE_VIEW_SUCCESS,
-    //     ProjectModule.PORTFOLIO_CONCENTRATION_LIMIT
-    //   )
-    // );
+    return buildHttpResponse(
+      responseData,
+      formatModuleMessage(
+        successMessage.MODULE_FETCH_SUCCESS,
+        ProjectModule.PORTFOLIO_CONCENTRATION_LIMIT
+      )
+    );
   }
 
   @ApiBearerAuth('JWT')

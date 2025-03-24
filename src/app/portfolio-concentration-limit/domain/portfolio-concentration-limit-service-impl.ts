@@ -6,7 +6,10 @@ import { NotFoundException } from '../../../shared/exception';
 import { CreatePortfolioConcentrationLimitDto } from './dtos/create-user';
 import { UpdatePortfolioConcentrationLimitDto } from './dtos/update-user';
 import { FindAllResponse, CountResponse, ServiceOption } from '../../../shared/types';
-import { PortfolioConcentrationLimit } from './core/entities/portfolio-concentration-limit';
+import {
+  PortfolioConcentrationLimit,
+  PortfolioConcentrationLimitResponseFormat,
+} from './core/entities/portfolio-concentration-limit';
 import { PortfolioConcentrationLimitQueryOptions } from './dtos/portfolio-concentration-limit-query';
 import { PortfolioConcentrationLimitService } from './abstractions/portfolio-concentration-limit-service';
 import { PortfolioConcentrationLimitRepository } from '../repository/abstractions/portfolio-concentration-limit-repository';
@@ -38,29 +41,24 @@ export class PortfolioConcentrationLimitServiceImpl implements PortfolioConcentr
     return await this.portfolioConcentrationRepository.count(query, option);
   }
 
-  // async get(
-  //   query: PortfolioConcentrationLimitQueryOptions,
-  //   option: ServiceOption
-  // ): Promise<FindAllResponse<PortfolioConcentrationLimit>> {
-  //   // return await this.portfolioConcentrationRepository.findAll(query, option);
-  //   return 'Portfolio Concentration Limit from stored procedure is comming soon';
-  // }
-  async get(query: PortfolioConcentrationLimitQueryOptions, option: ServiceOption): Promise<any> {
-    // return await this.portfolioConcentrationRepository.findAll(query, option);
-    return { data: 'Portfolio Concentration Limit from stored procedure is comming soon' };
+  async get(
+    query: PortfolioConcentrationLimitQueryOptions,
+    option: ServiceOption
+  ): Promise<FindAllResponse<PortfolioConcentrationLimit>> {
+    return await this.portfolioConcentrationRepository.findAll(query, option);
   }
 
-  async getOneById(id: number, option?: ServiceOption): Promise<PortfolioConcentrationLimit> {
-    const portfolioConcentrationLimit = await this.portfolioConcentrationRepository.findOneById(id);
-    if (!portfolioConcentrationLimit)
-      throw new NotFoundException(
-        formatModuleMessage(
-          errorMessage.MODULE_NOT_FOUND,
-          ProjectModule.PORTFOLIO_CONCENTRATION_LIMIT
-        )
-      );
+  async getPortfolioByIdFromStoredProcedure(
+    id: number,
+    query: PortfolioConcentrationLimitQueryOptions,
+    option?: ServiceOption
+  ): Promise<PortfolioConcentrationLimitResponseFormat> {
+    const result = await this.portfolioConcentrationRepository.getPortfolioByIdFromStoredProcedure(
+      id,
+      query
+    );
 
-    return portfolioConcentrationLimit;
+    return result;
   }
 
   async updateById(

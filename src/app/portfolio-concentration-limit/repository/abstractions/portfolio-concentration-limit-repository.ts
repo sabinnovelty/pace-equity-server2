@@ -7,5 +7,8 @@ export abstract class PortfolioConcentrationLimitRepository extends BaseReposito
   PortfolioConcentrationLimitQueryOptions
 > {
   // abstract getPortfolioFromStoredProcedure(id: number): Promise<PortfolioConcentrationLimit[]>;
-  abstract getPortfolioFromStoredProcedure?(id: number): Promise<any>;
+  abstract getPortfolioByIdFromStoredProcedure(
+    id: number,
+    query: PortfolioConcentrationLimitQueryOptions
+  ): Promise<any>;
 }

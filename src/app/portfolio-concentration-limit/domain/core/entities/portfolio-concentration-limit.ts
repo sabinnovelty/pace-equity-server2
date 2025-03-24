@@ -1,5 +1,3 @@
-import { Rule } from './rule';
-import { Portfolio } from './portfolio';
 import { BaseEntity } from '../../../../../shared/entities';
 
 export class PortfolioConcentrationLimit extends BaseEntity {
@@ -12,4 +10,12 @@ export class PortfolioConcentrationLimit extends BaseEntity {
     this.portfolioId = builder.portfolioId;
     this.ruleId = builder.ruleId;
   }
+}
+
+export class PortfolioConcentrationLimitResponseFormat {
+  totalPortfolioAmount: number;
+  concentrationLimit: any[];
+  weightedAverage: number;
+  cirrusMajorityMetrics?: any;
+  portfolioName: string;
 }

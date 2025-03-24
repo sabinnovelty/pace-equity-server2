@@ -9,4 +9,9 @@ export abstract class PortfolioConcentrationLimitService extends BaseService<
   CreatePortfolioConcentrationLimitDto,
   UpdatePortfolioConcentrationLimitDto,
   PortfolioConcentrationLimitQueryOptions
-> {}
+> {
+  abstract getPortfolioByIdFromStoredProcedure(
+    id: number,
+    query: PortfolioConcentrationLimitQueryOptions
+  ): Promise<any>;
+}

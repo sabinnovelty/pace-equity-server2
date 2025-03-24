@@ -4,7 +4,7 @@ import { Rule } from '../../app/portfolio-concentration-limit/repository/schemas
 import { Portfolio } from '../../app/portfolio-concentration-limit/repository/schemas/portfolio-schema';
 import { PortfolioConcentrationLimitPresenter } from '../../app/portfolio-concentration-limit/presenters/abstractions/user-presenter';
 import { DefaultPortfolioConcentrationLimitPresenter } from '../../app/portfolio-concentration-limit/presenters/default-user-presenter';
-import { PortfolioConcentrationLimitPersistenceMapper } from '../../app/portfolio-concentration-limit/repository/mappers/user-persistence-mapper';
+import { PortfolioConcentrationLimitPersistenceMapper } from '../../app/portfolio-concentration-limit/repository/mappers/portfolio-concentration-limit-mapper';
 import { PortfolioConcentrationLimitServiceImpl } from '../../app/portfolio-concentration-limit/domain/portfolio-concentration-limit-service-impl';
 import { PortfolioConcentrationLimitSchema } from '../../app/portfolio-concentration-limit/repository/schemas/portfolio-concentration-limit-schema';
 import { PortfolioConcentrationLimitController } from '../../app/portfolio-concentration-limit/controllers/portfolio-concentration-limit-controller';

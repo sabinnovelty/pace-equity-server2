@@ -21,8 +21,9 @@ export class AuthenticationGuard implements CanActivate {
     ]);
 
     const request = context.switchToHttp().getRequest<HttpRequest>();
-
-    const token = this._extractToken(request);
+    console.log('this.configService.auth', this.configService);
+    const token = this._extractTokenFromCookie(request);
+    const refreshToken = this._extractTokenFromCookie(request, 'rt');
 
     if (!token) {
       if (isAnonymous) return true;
@@ -60,9 +61,7 @@ export class AuthenticationGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 
-  private _extractTokenFromCookie(request: HttpRequest): Maybe<string> {
-    const cookies = request.cookies;
-
-    return cookies[ACCESS_TOKEN_COOKIE_KEY];
+  private _extractTokenFromCookie(request: HttpRequest, cookieName = 'at'): Maybe<string> {
+    return request.signedCookies[cookieName];
   }
 }

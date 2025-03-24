@@ -1,0 +1,66 @@
+name: Build & Deploy Pipeline
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Get repository name
+        id: repo-name
+        uses: MariachiBear/get-repo-name-action@v1.1.0
+        with:
+          with-owner: 'false'
+          string-case: 'lowercase'
+
+      - name: Authenticate with AWS ECR
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: us-east-2
+          role-to-assume: arn:aws:iam::841840661024:role/oidc-ecr-authentication
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Configuring Environments
+        run: |
+          echo ${{ vars.BASE_ENCODED_ENV}}  >> .env.${{ github.ref_name }}.txt
+          base64 -d .env.${{ github.ref_name }}.txt >> .env.development
+      - name: Build Docker Image
+        run: |
+          docker build -t pace-equity-server-v2-${{ github.ref_name }} .
+          docker tag pace-equity-server-v2-${{ github.ref_name }}:latest 841840661024.dkr.ecr.us-east-2.amazonaws.com/pace-equity-server-v2-${{ github.ref_name }}:latest
+          docker push 841840661024.dkr.ecr.us-east-2.amazonaws.com/pace-equity-server-v2-${{ github.ref_name }}:latest
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+    steps:
+      - name: AWS SSM Send-Command
+        uses: peterkimzz/aws-ssm-send-command@master
+        id: ssm
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          instance-ids: ${{ secrets.INSTANCE_ID }}
+
+          working-directory: /home/ubuntu
+          command: bash server-v2-${{ github.ref_name }}.sh
+          comment: Deployed!
+      - name: Get the outputs
+        run: echo "The Command id is ${{ steps.ssm.outputs.command-id }}"

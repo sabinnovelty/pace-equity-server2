@@ -8,12 +8,7 @@ export function createSwaggerDocument(app: INestApplication<any>) {
     .setDescription(`${APP_NAME} API`)
     .setVersion('1.0')
     .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        description: 'Access token',
-      },
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: 'Access token' },
       'JWT'
     )
     .addBasicAuth(
@@ -21,7 +16,7 @@ export function createSwaggerDocument(app: INestApplication<any>) {
         name: 'Basic authorization',
         type: 'http',
         scheme: 'basic',
-        description: 'Username and password',
+        description: 'PortfolioConcentrationLimitname and password',
       },
       'BASIC_AUTH'
     );
@@ -30,8 +25,6 @@ export function createSwaggerDocument(app: INestApplication<any>) {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`api/docs`, app, document, {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
+    swaggerOptions: { persistAuthorization: true },
   });
 }

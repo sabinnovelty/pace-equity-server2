@@ -5,7 +5,7 @@ import successMessage from './messages/success-message';
 
 export { successMessage, errorMessage, RedisPrefix };
 
-export const APP_NAME = 'GoLD V2';
+export const APP_NAME = 'Pace Equity';
 
 export const SYSTEM = 'System';
 export const SOFT_DELETION_FIELD = 'deleted';

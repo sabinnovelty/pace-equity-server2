@@ -7,8 +7,8 @@ import { UnauthorizedException } from '../exception/unauthorized-exception';
  * @param serviceOption The service options containing authentication user information.
  * @returns The extracted `userId`.
  */
-export function extractAuthUserId(serviceOption: ServiceOption): string {
-  const authEntity = extractAuthUser(serviceOption);
+export function extractAuthPortfolioConcentrationLimitId(serviceOption: ServiceOption): string {
+  const authEntity = extractAuthPortfolioConcentrationLimit(serviceOption);
 
   return authEntity.id;
 }
@@ -18,7 +18,7 @@ export function extractAuthUserId(serviceOption: ServiceOption): string {
  * @param serviceOption The service options containing authentication user information.
  * @returns The extracted authentication user.
  */
-export function extractAuthUser(serviceOption: ServiceOption): AuthEntity {
+export function extractAuthPortfolioConcentrationLimit(serviceOption: ServiceOption): AuthEntity {
   const authEntity = serviceOption.authEntity;
   if (!authEntity) throw new UnauthorizedException(errorMessage.UNAUTHENTICATED_ACCESS);
 

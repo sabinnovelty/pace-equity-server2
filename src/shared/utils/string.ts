@@ -21,7 +21,7 @@ export function replaceDynamicVariables(
       .split('.')
       .reduce((obj: Record<string, any>, key: string) => obj?.[key], variables);
 
-    return value !== undefined ? value : emptyValuePlaceholder ?? match;
+    return value !== undefined ? value : (emptyValuePlaceholder ?? match);
   });
 }
 

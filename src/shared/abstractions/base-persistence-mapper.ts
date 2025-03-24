@@ -1,7 +1,8 @@
 import { BaseEntity } from '../entities';
+import { FindManyOptions } from 'typeorm';
 import { withoutEmptyValues } from '../utils';
 import { AnyObj, DBQuery, IQuery } from '../types';
-import { BaseSchema } from '../../external-lib/mongo-db';
+import { BaseSchema } from '../../external-lib/postgres/schema';
 
 export abstract class BasePersistenceMapper<
   Entity extends BaseEntity,
@@ -12,11 +13,11 @@ export abstract class BasePersistenceMapper<
 
   abstract persistenceToDomain(persistence: Schema): Entity;
 
-  updateDomainToPeristence(domain: Partial<Entity>): Partial<Schema> | AnyObj {
+  updateDomainToPersistence(domain: Partial<Entity>): Partial<Schema> | AnyObj {
     return withoutEmptyValues(domain);
   }
 
-  mapQuery(query: QueryOptions): DBQuery<Schema> {
+  mapQuery(query: QueryOptions): FindManyOptions<Schema> {
     return withoutEmptyValues(query as AnyObj);
   }
 }

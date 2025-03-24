@@ -1,10 +1,10 @@
 export interface IAuthConfig {
-  defaultUserPassword: string;
   authTokenSecret: string;
+  cookieSecret: string;
 }
 
 export interface IDbConfig {
-  protocol: string;
+  protocol?: string;
   username: string;
   password: string;
   port?: number;
@@ -13,12 +13,7 @@ export interface IDbConfig {
 }
 
 export interface IDbEncryptionConfig {
-  aws: {
-    accessKey: string;
-    secretKey: string;
-    keyArn: string;
-    region: string;
-  };
+  aws: { accessKey: string; secretKey: string; keyArn: string; region: string };
   vault: {
     collectionName: string;
     dataKeyName: string;

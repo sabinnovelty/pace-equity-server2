@@ -1,6 +1,6 @@
 export enum ProjectModule {
-  //User Auth Service
-  USER = 'User',
+  //PortfolioConcentrationLimit Auth Service
+  PORTFOLIO_CONCENTRATION_LIMIT = 'PortfolioConcentrationLimit',
   CLIENT = 'Client',
   AUTH = 'Auth',
   TOKEN = 'Token',

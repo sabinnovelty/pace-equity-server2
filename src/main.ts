@@ -7,34 +7,29 @@ import { APP_NAME } from './shared/constants';
 import { Logger } from './shared/abstractions';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import { INestApplication } from '@nestjs/common';
-import { registerMongoConnection } from './external-lib/mongo-db';
 import { ConfigService } from './shared/abstractions/config-service';
 import { createSwaggerDocument } from './external-lib/nest-js/docs/swagger';
 import { HttpResponseInterceptor } from './external-lib/nest-js/interceptors';
-import { getMongoModelsForRegistration } from './external-lib/mongo-db/register_models';
 import { DomainExceptionFilter, ZodExceptionFilter } from './external-lib/nest-js/filters';
-import { MongoDBExceptionFilter } from './external-lib/nest-js/filters/mongo-exception-filter';
 import { DefaultExceptionFilter } from './external-lib/nest-js/filters/default-exception-filter';
 
 class Application {
   constructor(private readonly app: INestApplication) {}
 
   async init() {
-    this.app.setGlobalPrefix('api');
+    // this.app.setGlobalPrefix('api');
 
-    this.app.use(cookieParser());
+    const configService = this.app.get(ConfigService);
+
+    this.app.use(cookieParser(configService.auth.cookieSecret));
     this.app.use(compression()); //compresses responses with size > 1kb by default
 
     this._attachInterceptors();
 
     this._attachGlobalFilters();
 
-    const configService = this.app.get(ConfigService);
-
     patchNestJsSwagger();
     createSwaggerDocument(this.app);
-
-    registerMongoConnection(this.app, getMongoModelsForRegistration(this.app));
 
     await this._listen(configService.app);
   }
@@ -46,7 +41,6 @@ class Application {
   private _attachGlobalFilters() {
     this.app.useGlobalFilters(
       new DefaultExceptionFilter(),
-      new MongoDBExceptionFilter(),
       new ZodExceptionFilter(),
       new DomainExceptionFilter()
     );

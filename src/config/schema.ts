@@ -11,6 +11,16 @@ export const mongodbSchema = z.object({
   MONGO_DB_PORT: z.string().pipe(z.coerce.number()).optional(),
 });
 
+export const postgresSchema = z.object({
+  DB_NAME: z.string(),
+  DB_USERNAME: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_HOST: z.string(),
+  // MONGO_CLUSTER_NAME: z.string(),
+  // MONGO_DB_PROTOCOL: z.enum(['mongodb', 'mongodb+srv']),
+  DB_PORT: z.string().pipe(z.coerce.number()).optional(),
+});
+
 export const mongodbEncryptionSchema = z.object({
   AWS_REGION: z.string(),
   AWS_KEY_ARN: z.string(),
@@ -44,12 +54,9 @@ export const appSchema = z.object({
 });
 
 export const configSchema = z
-  .object({
-    DEFAULT_USER_PASSWORD: z.string(),
-    AUTH_TOKEN_SECRET: z.string(),
-  })
+  .object({ AUTH_TOKEN_SECRET: z.string(), COOKIE_SECRET: z.string() })
   .merge(appSchema)
-  .merge(mongodbSchema)
+  .merge(postgresSchema)
   .merge(redisSchema);
 
 export type IEnvConfig = z.infer<typeof configSchema>;

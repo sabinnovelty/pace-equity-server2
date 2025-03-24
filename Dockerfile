@@ -1,47 +1,24 @@
-FROM node:20.2-alpine3.17 as base
+# Use official Node.js image as the base
+FROM node:20-alpine
 
-# adding apk deps to avoid node-gyp related errors and some other stuff. adds turborepo globally
-RUN apk add -f --update --no-cache --virtual .gyp nano bash libc6-compat python3 make g++ \
-      && npm i -g turbo \
-      && apk del .gyp
-
-#############################################
-FROM base AS pruned
+# Set the working directory inside the container
 WORKDIR /app
-ARG APP
 
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application files
 COPY . .
 
-# see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
-RUN turbo prune --scope=$APP --docker
+# Build the NestJS application
+RUN npm run build
 
-#############################################
-FROM base AS installer
-WORKDIR /app
-ARG APP
+# Expose the application port
+EXPOSE 4000
 
-COPY --from=pruned /app/out/json/ .
-COPY --from=pruned /app/out/package-lock.json /app/package-lock.json
+# Start the application in development mode
+CMD ["npm", "run", "start:dev"]
 
-# Forces the layer to recreate if the app's package.json changes
-COPY apps/${APP}/package.json /app/apps/${APP}/package.json
-
-# see https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypecache
-RUN npm i
-
-COPY --from=pruned /app/out/full/ .
-COPY turbo.json turbo.json
-
-RUN turbo run build --no-cache --filter=${APP}
-
-# re-running npm ensures that dependencies between workspaces are linked correctly
-RUN npm i
-
-#############################################
-FROM node:20.2-alpine3.17 AS runner
-WORKDIR /app
-ARG APP
-ARG START_COMMAND=start
-COPY --from=installer /app .
-
-CMD npm run ${APP}:${START_COMMAND}

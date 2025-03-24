@@ -2,11 +2,11 @@ import { Assigner } from '../types';
 import { getUUID } from '../utils/common';
 
 export class BaseEntity {
-  id: string;
+  id: number;
   created?: Assigner;
   updated?: Assigner;
 
-  constructor(id?: string) {
-    this.id = id ?? getUUID();
+  constructor(id?: number) {
+    this.id = id ?? 0;
   }
 }

@@ -30,19 +30,18 @@ export class ConfigServiceImpl implements ConfigService {
 
   get auth(): IAuthConfig {
     return {
-      defaultUserPassword: this._envData.DEFAULT_USER_PASSWORD,
       authTokenSecret: this._envData.AUTH_TOKEN_SECRET,
+      cookieSecret: this._envData.COOKIE_SECRET,
     };
   }
 
-  get mongoDb(): IDbConfig {
+  get postgres(): IDbConfig {
     return {
-      port: this._envData.MONGO_DB_PORT,
-      dbName: this._envData.MONGO_DB_NAME,
-      username: this._envData.MONGO_USERNAME,
-      password: this._envData.MONGO_PASSWORD,
-      host: this._envData.MONGO_CLUSTER_NAME,
-      protocol: this._envData.MONGO_DB_PROTOCOL,
+      port: this._envData.DB_PORT,
+      dbName: this._envData.DB_NAME,
+      username: this._envData.DB_USERNAME,
+      password: this._envData.DB_PASSWORD,
+      host: this._envData.DB_HOST,
     };
   }
 

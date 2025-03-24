@@ -1,8 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  },
+  "ts-node": { "require": ["tsconfig-paths/register"] },
   "display": "Default",
   "compilerOptions": {
     "declarationMap": true,
@@ -30,7 +28,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "outDir": "dist",
-    "rootDir": "./src",
+    "rootDir": "./src"
   },
   "include": ["./src/**/*"],
   "exclude": ["./dist", "./node_modules"]

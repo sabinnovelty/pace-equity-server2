@@ -10,13 +10,9 @@ export abstract class BaseService<
   QueryOptions = IQuery,
 > {
   abstract create(createDto: CreateDto, option?: ServiceOption): Promise<Entity>;
-  abstract count(query: QueryOptions, option?: ServiceOption): Promise<CountResponse>;
   abstract get(query: QueryOptions, option?: ServiceOption): Promise<FindAllResponse<Entity>>;
-  abstract getOneById(id: Entity['id'], option?: ServiceOption): Promise<Entity>;
-  abstract updateById(
-    id: Entity['id'],
-    updateDto: UpdateDto,
-    option?: ServiceOption
-  ): Promise<Entity>;
-  abstract deleteById(id: Entity['id'], option?: ServiceOption): Promise<void>;
+  abstract getOneById(id: number, option?: ServiceOption): Promise<Entity>;
+  abstract updateById(id: number, updateDto: UpdateDto, option?: ServiceOption): Promise<Entity>;
+  abstract deleteById(id: number, option?: ServiceOption): Promise<void>;
+  abstract count(query: QueryOptions, option?: ServiceOption): Promise<CountResponse>;
 }

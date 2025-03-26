@@ -46,7 +46,7 @@ export const redisSchema = z.object({
   REDIS_PASSWORD: z.string(),
   REDIS_PORT: z.string().pipe(z.coerce.number()),
 });
-
+console.log('ENV---', Environment);
 export const appSchema = z.object({
   ENV: z.nativeEnum(Environment),
   DEBUG: stringBooleanSchema.optional(),

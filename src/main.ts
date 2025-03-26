@@ -19,10 +19,9 @@ class Application {
   async init() {
     // this.app.setGlobalPrefix('api');
     const configService = this.app.get(ConfigService);
-
+    console.log('ConfigService--', ConfigService);
     this.app.use(cookieParser(configService.auth.cookieSecret));
     this.app.use(compression()); //compresses responses with size > 1kb by default
-
     this._attachInterceptors();
 
     this._attachGlobalFilters();

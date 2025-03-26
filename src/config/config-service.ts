@@ -17,10 +17,13 @@ export class ConfigServiceImpl implements ConfigService {
   private _envData: IEnvConfig;
 
   constructor() {
+    console.log('Env---', this._parsedEnv, configSchema);
+
     this._envData = validateConfig<IEnvConfig>(this._parsedEnv, configSchema);
   }
 
   get app(): IAppConfig {
+    console.log('COnfigServiceImpl get called');
     return {
       env: this._envData.ENV,
       isDebug: this._envData.DEBUG,
@@ -63,6 +66,15 @@ export class ConfigServiceImpl implements ConfigService {
   }
 
   private get _parsedEnv() {
-    return { ...dotenv.config().parsed };
+    const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
+    const result = dotenv.config({ path: envFile });
+
+    if (result.error) {
+      console.error(`❌ Error loading ${envFile}:`, result.error);
+    } else {
+      console.log(`✅ Loaded ${envFile}`, result.parsed);
+    }
+
+    return { ...result.parsed };
   }
 }

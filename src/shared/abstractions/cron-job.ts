@@ -7,7 +7,6 @@ export type CronJobOptions = {
   timeZone?: string;
   start?: boolean;
 };
-
 export abstract class CronJob {
   abstract initialize(options: CronJobOptions): void;
   abstract start(): void;

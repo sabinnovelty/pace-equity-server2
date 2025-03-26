@@ -4,7 +4,7 @@ import { UnauthorizedException } from '../../../shared/exception';
 import { AuthEntity, HttpRequest, Maybe } from '../../../shared/types';
 import { ConfigService, TokenHelper } from '../../../shared/abstractions';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { ACCESS_TOKEN_COOKIE_KEY, AUTHORIZATION_HEADER } from '../../../shared/constants';
+import { AUTHORIZATION_HEADER } from '../../../shared/constants';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

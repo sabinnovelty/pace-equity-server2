@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { PortfolioConcentrationLimitSchema } from './portfolio-concentration-limit-schema';
+import { PortfolioConcentrationLimitService } from '../../domain/abstractions/portfolio-concentration-limit-service';
 
 @Entity()
 export class Rule {
@@ -14,7 +15,7 @@ export class Rule {
 
   @ManyToOne(
     () => PortfolioConcentrationLimitSchema,
-    portfolioConcentrationLimit => portfolioConcentrationLimit.rules
+    portfolioConcentrationLimitSchema => portfolioConcentrationLimitSchema.rules
   )
   portfolioConcentrationLimit: PortfolioConcentrationLimitSchema;
 }

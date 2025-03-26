@@ -3,6 +3,7 @@ import { FindAllResponse } from '../../../shared/types';
 import { PortfolioConcentrationLimitResponse } from './response/user-response';
 import { PortfolioConcentrationLimitPresenter } from './abstractions/user-presenter';
 import { PortfolioConcentrationLimit } from '../domain/core/entities/portfolio-concentration-limit';
+import { EncryptionTypeMismatch } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class DefaultPortfolioConcentrationLimitPresenter

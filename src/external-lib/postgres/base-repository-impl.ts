@@ -1,5 +1,5 @@
 import { BaseSchema } from './schema';
-import { Equal, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { BaseEntity } from '../../shared/entities';
 // import { errorMessage } from '../../shared/constants';
 // import { DomainException } from '../../shared/exception';
@@ -7,7 +7,6 @@ import { BaseEntity } from '../../shared/entities';
 import { BasePersistenceMapper, BaseRepository } from '../../shared/abstractions';
 import {
   CountResponse,
-  DBQuery,
   FindAllResponse,
   IQuery,
   Nullable,

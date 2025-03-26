@@ -1,6 +1,7 @@
 import { AnyZodObject } from 'zod';
 
 export const validateConfig = <T>(config: any, schema: AnyZodObject, schemaName?: string) => {
+  console.log('result', config);
   const result = schema.safeParse(config);
 
   if (!result.success) {
